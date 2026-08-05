@@ -11,8 +11,6 @@ public interface ClientRepositoryPort {
 
     void delete(UUID uuid);
 
-    void put(Email email, Client client);
-
     Client getClientByCpf(CPF cpf);
 
     boolean existsByEmail(Email newEmail);
