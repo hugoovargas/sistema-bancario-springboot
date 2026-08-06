@@ -21,13 +21,17 @@ public class ClientRepositoryAdapter
     public ClientRepositoryAdapter(
             SpringDataClientRepository repository
     ) {
+
         this.repository = repository;
+
     }
 
 
     @Override
     public void delete(UUID id) {
+
         repository.deleteById(id);
+
     }
 
 
@@ -45,23 +49,36 @@ public class ClientRepositoryAdapter
     public boolean existsByEmail(
             Email email
     ) {
+
+
         return repository.existsByEmail(
                 email.value()
         );
+
     }
 
 
     @Override
-    public boolean existsByCpf(CPF cpf) {
+    public boolean existsByCpf(
+            CPF cpf
+    ) {
+
+
         return repository.existsByCpf(
                 cpf.value()
         );
+
     }
 
 
     @Override
-    public boolean existsById(UUID clientId) {
+    public boolean existsById(
+            UUID clientId
+    ) {
+
+
         return repository.existsById(clientId);
+
     }
 
 
@@ -74,10 +91,13 @@ public class ClientRepositoryAdapter
     @Override
     public void save(Client client) {
 
+
         ClientEntity entity =
                 ClientEntity.fromDomain(client);
 
+
         repository.save(entity);
+
     }
 
 }
