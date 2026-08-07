@@ -1,6 +1,5 @@
 package com.banco.bank_system.presentation.controller;
 
-
 import com.banco.bank_system.application.client.dto.output.ChangeClientEmailOutput;
 import com.banco.bank_system.application.client.dto.output.ChangeClientNameOutput;
 import com.banco.bank_system.application.client.dto.output.CreateClientOutput;
@@ -9,10 +8,13 @@ import com.banco.bank_system.application.client.usecases.*;
 import com.banco.bank_system.domain.valueobject.CPF;
 import com.banco.bank_system.domain.valueobject.Email;
 import com.banco.bank_system.domain.valueobject.PersonName;
-import com.banco.bank_system.presentation.dto.request.ChangeClientEmailRequest;
-import com.banco.bank_system.presentation.dto.request.ChangeClientNameRequest;
-import com.banco.bank_system.presentation.dto.request.CreateClientRequest;
-import com.banco.bank_system.presentation.dto.response.*;
+import com.banco.bank_system.presentation.dto.request.client.ChangeClientEmailRequest;
+import com.banco.bank_system.presentation.dto.request.client.ChangeClientNameRequest;
+import com.banco.bank_system.presentation.dto.request.client.CreateClientRequest;
+import com.banco.bank_system.presentation.dto.response.client.ChangeEmailResponse;
+import com.banco.bank_system.presentation.dto.response.client.ChangeNameResponse;
+import com.banco.bank_system.presentation.dto.response.client.ClientDataResponse;
+import com.banco.bank_system.presentation.dto.response.client.CreateClientResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

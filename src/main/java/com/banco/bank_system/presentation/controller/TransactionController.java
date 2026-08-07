@@ -1,6 +1,5 @@
 package com.banco.bank_system.presentation.controller;
 
-
 import com.banco.bank_system.application.transaction.dto.DepositOutput;
 import com.banco.bank_system.application.transaction.dto.TransferOutput;
 import com.banco.bank_system.application.transaction.dto.WithdrawOutput;
@@ -9,12 +8,12 @@ import com.banco.bank_system.application.transaction.usecases.TransferUseCase;
 import com.banco.bank_system.application.transaction.usecases.WithdrawUseCase;
 import com.banco.bank_system.domain.valueobject.AccountIdentity;
 import com.banco.bank_system.domain.valueobject.Money;
-import com.banco.bank_system.presentation.dto.request.DepositRequest;
-import com.banco.bank_system.presentation.dto.request.TransferRequest;
-import com.banco.bank_system.presentation.dto.request.WithdrawRequest;
-import com.banco.bank_system.presentation.dto.response.DepositResponse;
-import com.banco.bank_system.presentation.dto.response.TransferResponse;
-import com.banco.bank_system.presentation.dto.response.WithdrawResponse;
+import com.banco.bank_system.presentation.dto.request.transactions.DepositRequest;
+import com.banco.bank_system.presentation.dto.request.transactions.TransferRequest;
+import com.banco.bank_system.presentation.dto.request.transactions.WithdrawRequest;
+import com.banco.bank_system.presentation.dto.response.transactions.DepositResponse;
+import com.banco.bank_system.presentation.dto.response.transactions.TransferResponse;
+import com.banco.bank_system.presentation.dto.response.transactions.WithdrawResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
