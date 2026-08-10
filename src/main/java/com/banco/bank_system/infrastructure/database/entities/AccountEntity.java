@@ -40,21 +40,24 @@ public class AccountEntity {
 
     @Column(
             name = "client_id",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private UUID clientId;
 
 
     @Column(
             name = "account_number",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private String accountNumber;
 
 
     @Column(
             name = "agency_number",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private String branch;
 
@@ -73,9 +76,12 @@ public class AccountEntity {
 
     @Column(
             name = "created_at",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private LocalDateTime createdAt;
+
+
 
     public AccountEntity(
             UUID id,
@@ -96,6 +102,8 @@ public class AccountEntity {
         this.createdAt = createdAt;
     }
 
+
+
     public Account toDomain(){
 
         AccountIdentity identity =
@@ -104,8 +112,11 @@ public class AccountEntity {
                         accountNumber
                 );
 
+
         Money money =
                 Money.of(balance);
+
+
 
         return switch (accountType){
 
@@ -128,28 +139,42 @@ public class AccountEntity {
                             createdAt
                     );
         };
+
     }
 
 
 
     public static AccountEntity fromDomain(Account account){
 
+
         AccountType type =
                 account instanceof CheckingAccount
                         ? AccountType.CHECKING
                         : AccountType.SAVINGS;
 
+
+
         return new AccountEntity(
+
                 account.getId(),
+
                 account.getClientId(),
+
                 account.getAccountIdentity()
                         .accountNumber(),
+
                 account.getAccountIdentity()
                         .branch(),
+
                 account.getBalance()
                         .value(),
+
                 type,
+
                 account.getCreationTime()
+
         );
+
     }
+
 }

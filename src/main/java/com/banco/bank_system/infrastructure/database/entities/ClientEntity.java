@@ -19,6 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ClientEntity {
 
+
     @Id
     @Column(
             nullable = false,
@@ -26,14 +27,23 @@ public class ClientEntity {
     )
     private UUID id;
 
+
     @Column(nullable = false, unique = true)
     private String email;
+
 
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
+
+    @Column(
+            name = "CPF",
+            nullable = false,
+            updatable = false
+    )
     private String cpf;
+
+
 
     public ClientEntity(
             UUID id,
@@ -46,6 +56,7 @@ public class ClientEntity {
         this.name = name;
         this.cpf = cpf;
         this.email = email;
+
     }
 
 
@@ -53,22 +64,36 @@ public class ClientEntity {
     public Client toDomain(){
 
         return new Client(
+
                 id,
+
                 new PersonName(name),
+
                 new CPF(cpf),
+
                 new Email(email)
+
         );
+
     }
 
 
 
     public static ClientEntity fromDomain(Client client){
 
+
         return new ClientEntity(
+
                 client.getId(),
+
                 client.getName().value(),
+
                 client.getCpf().value(),
+
                 client.getEmail().value()
+
         );
+
     }
+
 }
