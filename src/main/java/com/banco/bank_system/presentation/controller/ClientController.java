@@ -1,5 +1,6 @@
 package com.banco.bank_system.presentation.controller;
 
+
 import com.banco.bank_system.application.client.dto.output.ChangeClientEmailOutput;
 import com.banco.bank_system.application.client.dto.output.ChangeClientNameOutput;
 import com.banco.bank_system.application.client.dto.output.CreateClientOutput;
@@ -41,21 +42,6 @@ public class ClientController {
         this.removeClientUseCase = removeClientUseCase;
     }
 
-    @GetMapping(path = "/{cpf}")
-    public ResponseEntity<ClientDataResponse> clientData(
-            @PathVariable String cpf
-    ) {
-
-        GetClientDataOutput output = getClientDataUseCase.execute(
-                new CPF(cpf)
-        );
-
-
-        return ResponseEntity.ok(
-                ClientDataResponse.from(output)
-        );
-    }
-
     @PostMapping
     public ResponseEntity<CreateClientResponse> createClient(
             @RequestBody CreateClientRequest client
@@ -69,6 +55,21 @@ public class ClientController {
 
         return ResponseEntity.ok(
                 CreateClientResponse.from(output)
+        );
+    }
+
+    @GetMapping(path = "/{cpf}")
+    public ResponseEntity<ClientDataResponse> clientData(
+            @PathVariable String cpf
+    ) {
+
+        GetClientDataOutput output = getClientDataUseCase.execute(
+                new CPF(cpf)
+        );
+
+
+        return ResponseEntity.ok(
+                ClientDataResponse.from(output)
         );
     }
 
