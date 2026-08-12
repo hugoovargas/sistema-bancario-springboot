@@ -1,0 +1,12 @@
+package com.banco.bank_system.domain.exception;
+
+public class InvalidClientIdException extends DomainException{
+    public InvalidClientIdException(String message) {
+        super(message);
+    }
+
+    @Override
+    public String getCode() {
+        return "";
+    }
+}
