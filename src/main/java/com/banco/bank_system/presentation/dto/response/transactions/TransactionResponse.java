@@ -2,7 +2,6 @@ package com.banco.bank_system.presentation.dto.response.transactions;
 
 import com.banco.bank_system.application.transaction.dto.TransactionDTO;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
@@ -12,8 +11,10 @@ public record TransactionResponse(
         UUID operationId,
         String type,
         String amount,
-        UUID source,
-        UUID destination,
+        String source_branch,
+        String source_accountNumber,
+        String destination_branch,
+        String destination_accountNumber,
         String dateTime
 ) {
 
@@ -27,8 +28,10 @@ public record TransactionResponse(
                                 t.operationId(),
                                 t.type().toString(),
                                 t.amount().value().toString(),
-                                t.sourceId(),
-                                t.destinationId(),
+                                t.source().branch(),
+                                t.source().accountNumber(),
+                                t.destination().branch(),
+                                t.destination().accountNumber(),
                                 formatter.format(t.dateTime())
                         )
                 )
