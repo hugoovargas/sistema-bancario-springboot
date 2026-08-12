@@ -2,6 +2,7 @@ package com.banco.bank_system.presentation.dto.response.transactions;
 
 import com.banco.bank_system.application.transaction.dto.TransactionDTO;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
@@ -24,14 +25,14 @@ public record TransactionResponse(
     public static List<TransactionResponse> from(List<TransactionDTO> output) {
         return output.stream()
                 .map(t -> new TransactionResponse(
-                                t.id(),
-                                t.operationId(),
+                                t.id().id(),
+                                t.operationId().id(),
                                 t.type().toString(),
                                 t.amount().value().toString(),
-                                t.source().branch(),
-                                t.source().accountNumber(),
-                                t.destination().branch(),
-                                t.destination().accountNumber(),
+                                t.source_branch(),
+                                t.source_accountNumber(),
+                                t.destination_branch(),
+                                t.destination_accountNumber(),
                                 formatter.format(t.dateTime())
                         )
                 )

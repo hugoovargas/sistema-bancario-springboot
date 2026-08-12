@@ -4,14 +4,11 @@ import com.banco.bank_system.application.client.dto.CreateClientOutput;
 import com.banco.bank_system.application.client.port.ClientRepositoryPort;
 import com.banco.bank_system.domain.entities.Client;
 import com.banco.bank_system.domain.valueobject.CPF;
-import com.banco.bank_system.domain.valueobject.ClientId;
 import com.banco.bank_system.domain.valueobject.Email;
 import com.banco.bank_system.domain.valueobject.PersonName;
 import com.banco.bank_system.application.exception.CpfAlreadyExistsException;
 import com.banco.bank_system.application.exception.EmailAlreadyExistsException;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 public class CreateClientUseCase {

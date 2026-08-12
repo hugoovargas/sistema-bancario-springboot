@@ -7,6 +7,6 @@ public class InvalidClientIdException extends DomainException{
 
     @Override
     public String getCode() {
-        return "";
+        return "INVALID_CLIENT_ID";
     }
 }
