@@ -2,8 +2,8 @@ package com.banco.bank_system.application.account.usecases;
 
 import com.banco.bank_system.application.account.dto.CreateAccountOutput;
 import com.banco.bank_system.application.account.port.AccountRepositoryPort;
-import com.banco.bank_system.application.account.util.AccountFinder;
 import com.banco.bank_system.application.client.port.ClientRepositoryPort;
+import com.banco.bank_system.application.exception.ClientNotFoundException;
 import com.banco.bank_system.domain.entities.Account;
 import com.banco.bank_system.domain.entities.CheckingAccount;
 import com.banco.bank_system.domain.entities.Client;
@@ -12,7 +12,6 @@ import com.banco.bank_system.domain.enums.AccountType;
 import com.banco.bank_system.domain.valueobject.AccountIdentity;
 import com.banco.bank_system.domain.valueobject.AccountIdentityFactory;
 import com.banco.bank_system.domain.valueobject.CPF;
-import com.banco.bank_system.application.exception.ClientNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;

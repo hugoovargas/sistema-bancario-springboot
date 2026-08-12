@@ -6,6 +6,7 @@ import com.banco.bank_system.domain.entities.Transaction;
 import com.banco.bank_system.domain.enums.TransactionType;
 import com.banco.bank_system.domain.exception.InvalidTransactionException;
 import com.banco.bank_system.domain.valueobject.Money;
+import com.banco.bank_system.domain.valueobject.OperationId;
 import com.banco.bank_system.entities.helper.AccountFactory;
 import org.junit.jupiter.api.Test;
 

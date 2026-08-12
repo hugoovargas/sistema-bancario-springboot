@@ -51,10 +51,10 @@ public class WithdrawUseCase {
         transactionRepository.save(withdraw);
 
         return new WithdrawOutput(
-                account.getId(),
+                account.getId().id(),
                 withdraw.getAmount(),
                 account.getBalance(),
-                withdraw.getId(),
+                withdraw.getId().id(),
                 withdraw.getDateTime()
         );
     }
