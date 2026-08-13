@@ -1,4 +1,4 @@
-package com.banco.bank_system.usecase.accountUseCaseTests;
+package com.banco.bank_system.useCase.accountUseCaseTests;
 
 import com.banco.bank_system.application.account.port.AccountRepositoryPort;
 import com.banco.bank_system.application.account.usecases.RemoveAccountUseCase;
@@ -16,17 +16,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.Clock;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RemoveAccountUseCaseTest {
+    @Mock
+    private AccountRepositoryPort repository;
 
     @Mock
-    private AccountRepositoryPort accountRepository;
-
-    @Mock
-    private AccountFinder finder;
+    private AccountFinder accountFinder;
 
     @InjectMocks
     private RemoveAccountUseCase useCase;
@@ -36,14 +35,18 @@ public class RemoveAccountUseCaseTest {
 
         Account account = AccountFactory.checking(Clock.systemUTC());
 
-        when(finder.byIdentity(
-                account.getAccountIdentity()))
+        when(accountFinder.byIdentity(account.getAccountIdentity()))
                 .thenReturn(account);
 
         useCase.execute(account.getAccountIdentity());
 
-        verify(finder)
+        verify(accountFinder)
                 .byIdentity(account.getAccountIdentity());
+
+        verify(repository)
+                .delete(account.getId());
+
+        verifyNoMoreInteractions(repository);
     }
 
     @Test
@@ -54,13 +57,20 @@ public class RemoveAccountUseCaseTest {
 
         account.deposit(Money.of("100"));
 
-        when(finder.byIdentity(
-                account.getAccountIdentity()))
+        when(accountFinder.byIdentity(account.getAccountIdentity()))
                 .thenReturn(account);
 
         assertThrows(
                 CannotRemoveAccountException.class,
                 () -> useCase.execute(account.getAccountIdentity())
         );
+
+        verify(accountFinder)
+                .byIdentity(account.getAccountIdentity());
+
+        verify(repository, never())
+                .delete(any());
+
+        verifyNoMoreInteractions(repository, accountFinder);
     }
 }

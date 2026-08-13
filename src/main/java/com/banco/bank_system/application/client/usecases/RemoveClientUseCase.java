@@ -24,7 +24,7 @@ public class RemoveClientUseCase {
         this.accountRepository = accountRepository;
     }
 
-    public void execute(CPF cpf){
+    public void execute(CPF cpf) {
         Client client =
                 clientRepository.getClientByCpf(cpf)
                         .orElseThrow(ClientNotFoundException::new);
@@ -35,7 +35,7 @@ public class RemoveClientUseCase {
         clientRepository.delete(client.getId());
     }
 
-    private void validateAccounts(ClientId clientId){
+    private void validateAccounts(ClientId clientId) {
         List<Account> accounts = accountRepository.getAccountsByClient(clientId);
 
         for (Account account : accounts) {
@@ -45,8 +45,6 @@ public class RemoveClientUseCase {
                 );
             }
         }
-
-        accountRepository.removeClientAccounts(clientId);
     }
 
     private void removeAllClientAccounts(ClientId clientId){

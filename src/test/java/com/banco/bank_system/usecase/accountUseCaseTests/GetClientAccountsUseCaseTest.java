@@ -1,4 +1,4 @@
-package com.banco.bank_system.usecase.accountUseCaseTests;
+package com.banco.bank_system.useCase.accountUseCaseTests;
 
 import com.banco.bank_system.application.account.dto.GetClientAccountsOutput;
 import com.banco.bank_system.application.account.port.AccountRepositoryPort;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class GetClientAccountsUseCaseTest {
@@ -52,5 +52,13 @@ public class GetClientAccountsUseCaseTest {
         GetClientAccountsOutput output = useCase.execute(client.getCpf());
 
         assertEquals(2, output.accountIdentities().size());
+
+        verify(clientRepository)
+                .getClientByCpf(client.getCpf());
+
+        verify(accountRepository)
+                .getAccountsByClient(client.getId());
+
+        verifyNoMoreInteractions(clientRepository, accountRepository);
     }
 }
