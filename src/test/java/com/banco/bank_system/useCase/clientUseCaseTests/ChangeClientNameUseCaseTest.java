@@ -1,12 +1,14 @@
-package com.banco.bank_system.usecase.clientUseCaseTests;
+package com.banco.bank_system.useCase.clientUseCaseTests;
 
 import com.banco.bank_system.application.client.dto.GetClientDataOutput;
 import com.banco.bank_system.application.client.port.ClientRepositoryPort;
+import com.banco.bank_system.application.client.usecases.ChangeClientEmailUseCase;
 import com.banco.bank_system.application.client.usecases.ChangeClientNameUseCase;
 import com.banco.bank_system.domain.entities.Client;
 import com.banco.bank_system.domain.exception.InvalidClientChangeException;
 import com.banco.bank_system.domain.valueobject.PersonName;
 import com.banco.bank_system.useCase.clientUseCaseTests.helper.ClientFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,8 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ChangeClientNameUseCaseTest {
@@ -84,5 +85,10 @@ public class ChangeClientNameUseCaseTest {
                         newName
                 )
         );
+
+        verify(clientRepository)
+                .save(client);
+
+        verifyNoMoreInteractions(clientRepository);
     }
 }

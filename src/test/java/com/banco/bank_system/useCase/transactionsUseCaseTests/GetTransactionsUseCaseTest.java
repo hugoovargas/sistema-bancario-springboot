@@ -1,4 +1,4 @@
-package com.banco.bank_system.usecase.transactionsUseCaseTests;
+package com.banco.bank_system.useCase.transactionsUseCaseTests;
 
 import com.banco.bank_system.application.account.util.AccountFinder;
 import com.banco.bank_system.application.exception.AccountNotFoundException;
@@ -158,7 +158,13 @@ class GetTransactionsUseCaseTest {
                 () -> useCase.execute(identity)
         );
 
+        verify(accountFinder)
+                .byIdentity(identity);
+
         verify(transactionRepository, never())
                 .findByAccountId(any());
+
+        verifyNoMoreInteractions(accountFinder);
+        verifyNoMoreInteractions(transactionRepository);
     }
 }

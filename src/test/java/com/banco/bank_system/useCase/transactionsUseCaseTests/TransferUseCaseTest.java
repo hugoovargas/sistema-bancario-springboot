@@ -1,5 +1,4 @@
-package com.banco.bank_system.usecase.transactionsUseCaseTests;
-
+package com.banco.bank_system.useCase.transactionsUseCaseTests;
 
 import com.banco.bank_system.application.account.port.AccountRepositoryPort;
 import com.banco.bank_system.application.account.util.AccountFinder;
@@ -165,36 +164,29 @@ public class TransferUseCaseTest {
 
         assertEquals(Money.ZERO, from.getBalance());
         assertEquals(Money.of("200"), to.getBalance());
+
+        verifyNoMoreInteractions(accountFinder);
+        verifyNoMoreInteractions(accountRepository);
+        verifyNoMoreInteractions(transactionRepository);
     }
 
     @Test
     void shouldThrowExceptionWhenTransferringToSameAccount() {
 
-        // Arrange
-        CheckingAccount from =
+        CheckingAccount account =
                 AccountFactory.checking(clock);
 
-        CheckingAccount to =
-                AccountFactory.checking(clock);
+        account.deposit(Money.of("200"));
 
-        Money value = Money.of("200");
-
-        from.deposit(value);
-
-        when(accountFinder.byIdentity(from.getAccountIdentity()))
-                .thenReturn(from);
-
-        when(accountFinder.byIdentity(to.getAccountIdentity()))
-                .thenReturn(to);
-
-        // Assert
+        when(accountFinder.byIdentity(account.getAccountIdentity()))
+                .thenReturn(account);
 
         assertThrows(
                 InvalidTransferException.class,
                 () -> useCase.execute(
-                        from.getAccountIdentity(),
-                        to.getAccountIdentity(),
-                        value
+                        account.getAccountIdentity(),
+                        account.getAccountIdentity(),
+                        Money.of("200")
                 )
         );
     }
@@ -220,8 +212,15 @@ public class TransferUseCaseTest {
                 )
         );
 
+        verify(accountFinder)
+                .byIdentity(from.getAccountIdentity());
+
+        verify(accountFinder)
+                .byIdentity(to.getAccountIdentity());
+
         verify(accountRepository, never()).save(any());
         verify(transactionRepository, never()).save(any());
+
     }
 
     @Test
@@ -244,6 +243,12 @@ public class TransferUseCaseTest {
                         Money.of("-1")
                 )
         );
+
+        verify(accountFinder)
+                .byIdentity(from.getAccountIdentity());
+
+        verify(accountFinder)
+                .byIdentity(to.getAccountIdentity());
 
         verify(accountRepository, never()).save(any());
         verify(transactionRepository, never()).save(any());
@@ -269,6 +274,12 @@ public class TransferUseCaseTest {
                         Money.ZERO
                 )
         );
+
+        verify(accountFinder)
+                .byIdentity(from.getAccountIdentity());
+
+        verify(accountFinder)
+                .byIdentity(to.getAccountIdentity());
 
         verify(accountRepository, never()).save(any());
         verify(transactionRepository, never()).save(any());

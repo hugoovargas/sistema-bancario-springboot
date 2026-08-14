@@ -1,5 +1,4 @@
-package com.banco.bank_system.usecase.transactionsUseCaseTests;
-
+package com.banco.bank_system.useCase.transactionsUseCaseTests;
 
 import com.banco.bank_system.application.account.port.AccountRepositoryPort;
 import com.banco.bank_system.application.account.util.AccountFinder;
@@ -25,8 +24,7 @@ import java.time.ZoneOffset;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class DepositUseCaseTest {
@@ -107,5 +105,13 @@ public class DepositUseCaseTest {
 
         assertEquals(Money.of("500"), output.depositedAmount());
         assertEquals(Money.of("500"), account.getBalance());
+        assertEquals(
+                Money.of("500"),
+                output.depositedAmount()
+        );
+
+        verifyNoMoreInteractions(accountFinder);
+        verifyNoMoreInteractions(accountRepository);
+        verifyNoMoreInteractions(transactionRepository);
     }
 }
