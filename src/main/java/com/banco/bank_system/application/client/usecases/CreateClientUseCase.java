@@ -2,13 +2,16 @@ package com.banco.bank_system.application.client.usecases;
 
 import com.banco.bank_system.application.client.dto.CreateClientOutput;
 import com.banco.bank_system.application.client.port.ClientRepositoryPort;
-import com.banco.bank_system.application.exception.CpfAlreadyExistsException;
-import com.banco.bank_system.application.exception.EmailAlreadyExistsException;
 import com.banco.bank_system.domain.entities.Client;
 import com.banco.bank_system.domain.valueobject.CPF;
+import com.banco.bank_system.domain.valueobject.ClientId;
 import com.banco.bank_system.domain.valueobject.Email;
 import com.banco.bank_system.domain.valueobject.PersonName;
+import com.banco.bank_system.application.exception.CpfAlreadyExistsException;
+import com.banco.bank_system.application.exception.EmailAlreadyExistsException;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class CreateClientUseCase {
@@ -43,18 +46,14 @@ public class CreateClientUseCase {
     private void validateCpfUniqueness(CPF cpf) {
 
         if (clientRepository.existsByCpf(cpf)) {
-            throw new CpfAlreadyExistsException(
-                    "CPF já cadastrado"
-            );
+            throw new CpfAlreadyExistsException();
         }
     }
 
     private void validateEmailUniqueness(Email email) {
 
         if (clientRepository.existsByEmail(email)) {
-            throw new EmailAlreadyExistsException(
-                    "Email já cadastrado"
-            );
+            throw new EmailAlreadyExistsException();
         }
     }
 }
