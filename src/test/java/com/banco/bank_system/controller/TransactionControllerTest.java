@@ -17,10 +17,16 @@ import com.banco.bank_system.presentation.dto.request.transactions.TransferReque
 import com.banco.bank_system.presentation.dto.request.transactions.WithdrawRequest;
 import com.banco.bank_system.presentation.util.CurrencyFormatter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,7 +35,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -97,6 +103,7 @@ class TransactionControllerTest {
                 );
     }
 
+
     @Test
     void shouldWithdraw() throws Exception {
 
@@ -134,7 +141,6 @@ class TransactionControllerTest {
                         any(Money.class)
                 );
     }
-
 
     @Test
     void shouldTransfer() throws Exception {
@@ -188,47 +194,66 @@ class TransactionControllerTest {
     @Test
     void shouldReturnTransactions() throws Exception {
 
-        List<TransactionDTO> output =
-                List.of(
-                        new TransactionDTO(
-                                new TransactionId(UUID.randomUUID()),
-                                OperationId.generate(),
-                                TransactionType.DEPOSIT,
-                                Money.of("500"),
-                                null,
-                                null,
-                                "01",
-                                "123456-1",
-                                LocalDateTime.of(2026,1,10,10,0)
-                        ),
-                        new TransactionDTO(
-                                new TransactionId(UUID.randomUUID()),
-                                OperationId.generate(),
-                                TransactionType.WITHDRAW,
-                                Money.of("200"),
-                                "01",
-                                "123456-1",
-                                null,
-                                null,
-                                LocalDateTime.of(2026,1,10,11,0)
+        Page<TransactionDTO> output =
+                new PageImpl<>(
+                        List.of(
+                                new TransactionDTO(
+                                        new TransactionId(UUID.randomUUID()),
+                                        OperationId.generate(),
+                                        TransactionType.DEPOSIT,
+                                        Money.of("500"),
+                                        null,
+                                        null,
+                                        "01",
+                                        "123456-1",
+                                        LocalDateTime.of(2026,1,10,10,0)
+                                ),
+                                new TransactionDTO(
+                                        new TransactionId(UUID.randomUUID()),
+                                        OperationId.generate(),
+                                        TransactionType.WITHDRAW,
+                                        Money.of("200"),
+                                        "01",
+                                        "123456-1",
+                                        null,
+                                        null,
+                                        LocalDateTime.of(2026,1,10,11,0)
+                                )
                         )
                 );
 
-        when(getTransactionsUseCase.execute(any()))
+        when(getTransactionsUseCase.execute(
+                any(AccountIdentity.class),
+                anyInt(),
+                anyInt()))
                 .thenReturn(output);
 
         mockMvc.perform(
                         get("/transactions/01/123456-1")
+                                .param("page", "0")
+                                .param("size", "10")
                 )
-                .andExpect(jsonPath("$[0].type").value("DEPOSIT"))
-                .andExpect(jsonPath("$[0].destination_branch").value("01"))
-                .andExpect(jsonPath("$[0].destination_accountNumber").value("123456-1"))
+                .andExpect(status().isOk())
 
-                .andExpect(jsonPath("$[1].type").value("WITHDRAW"))
-                .andExpect(jsonPath("$[1].source_branch").value("01"))
-                .andExpect(jsonPath("$[1].source_accountNumber").value("123456-1"));
+                .andExpect(jsonPath("$.content[0].type").value("DEPOSIT"))
+                .andExpect(jsonPath("$.content[0].destination_branch").value("01"))
+                .andExpect(jsonPath("$.content[0].destination_accountNumber").value("123456-1"))
+
+                .andExpect(jsonPath("$.content[1].type").value("WITHDRAW"))
+                .andExpect(jsonPath("$.content[1].source_branch").value("01"))
+                .andExpect(jsonPath("$.content[1].source_accountNumber").value("123456-1"))
+
+                // Informações da paginação
+                .andExpect(jsonPath("$.number").value(0))
+                .andExpect(jsonPath("$.size").value(2))
+                .andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.totalPages").value(1));
 
         verify(getTransactionsUseCase)
-                .execute(any(AccountIdentity.class));
+                .execute(
+                        any(AccountIdentity.class),
+                        eq(0),
+                        eq(10)
+                );
     }
 }

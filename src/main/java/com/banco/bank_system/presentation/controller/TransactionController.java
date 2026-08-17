@@ -1,6 +1,5 @@
 package com.banco.bank_system.presentation.controller;
 
-
 import com.banco.bank_system.application.transaction.dto.DepositOutput;
 import com.banco.bank_system.application.transaction.dto.TransactionDTO;
 import com.banco.bank_system.application.transaction.dto.TransferOutput;
@@ -18,19 +17,30 @@ import com.banco.bank_system.presentation.dto.response.transactions.DepositRespo
 import com.banco.bank_system.presentation.dto.response.transactions.TransactionResponse;
 import com.banco.bank_system.presentation.dto.response.transactions.TransferResponse;
 import com.banco.bank_system.presentation.dto.response.transactions.WithdrawResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/transactions")
+@Tag(
+        name = "Transações",
+        description = "Operações relacionadas às movimentações financeiras das contas"
+)
 public class TransactionController {
 
     private final DepositUseCase depositUseCase;
     private final WithdrawUseCase withdrawUseCase;
     private final TransferUseCase transferUseCase;
-    private final GetTransactionsUseCase getAccountTransactionsUseCase;
+    private final GetTransactionsUseCase getTransactionsUseCase;
 
     public TransactionController(
             DepositUseCase depositUseCase,
@@ -40,13 +50,22 @@ public class TransactionController {
     ) {
         this.depositUseCase = depositUseCase;
         this.withdrawUseCase = withdrawUseCase;
-        this.getAccountTransactionsUseCase = getAccountTransactionsUseCase;
+        this.getTransactionsUseCase = getAccountTransactionsUseCase;
         this.transferUseCase = transferUseCase;
     }
 
+    @Operation(
+            summary = "Realizar depósito",
+            description = "Realiza um depósito em uma conta."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Depósito realizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "404", description = "Conta não encontrada")
+    })
     @PostMapping("/deposit")
     public ResponseEntity<DepositResponse> deposit(
-            @RequestBody DepositRequest request
+            @Valid @RequestBody DepositRequest request
     ) {
 
         DepositOutput output = depositUseCase.execute(
@@ -62,9 +81,18 @@ public class TransactionController {
         );
     }
 
+    @Operation(
+            summary = "Realizar saque",
+            description = "Realiza um saque em uma conta."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Saque realizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Saldo insuficiente ou dados inválidos"),
+            @ApiResponse(responseCode = "404", description = "Conta não encontrada")
+    })
     @PostMapping("/withdraw")
     public ResponseEntity<WithdrawResponse> withdraw(
-            @RequestBody WithdrawRequest request
+            @Valid @RequestBody WithdrawRequest request
     ) {
 
         WithdrawOutput output = withdrawUseCase.execute(
@@ -80,9 +108,18 @@ public class TransactionController {
         );
     }
 
+    @Operation(
+            summary = "Realizar transferência",
+            description = "Transfere um valor entre duas contas."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Transferência realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Saldo insuficiente ou dados inválidos"),
+            @ApiResponse(responseCode = "404", description = "Conta de origem ou destino não encontrada")
+    })
     @PostMapping("/transfer")
     public ResponseEntity<TransferResponse> transfer(
-            @RequestBody TransferRequest request
+            @Valid @RequestBody TransferRequest request
     ) {
 
         TransferOutput output = transferUseCase.execute(
@@ -102,17 +139,43 @@ public class TransactionController {
         );
     }
 
+    @Operation(
+            summary = "Consultar extrato",
+            description = "Retorna o histórico de transações de uma conta."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Extrato retornado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "404", description = "Conta não encontrada")
+    })
     @GetMapping("/{branch}/{accountNumber}")
-    public ResponseEntity<List<TransactionResponse>> getTransactions(
+    public ResponseEntity<Page<TransactionResponse>> getTransactions(
+            @Parameter(
+                    description = "Agência da conta",
+                    example = "01"
+            )
             @PathVariable String branch,
-            @PathVariable String accountNumber
-    ){
+
+            @Parameter(
+                    description = "Número da conta",
+                    example = "123456-1"
+            )
+            @PathVariable String accountNumber,
+
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
         AccountIdentity accountIdentity = new AccountIdentity(branch, accountNumber);
 
-        List<TransactionDTO> output = getAccountTransactionsUseCase.execute(accountIdentity);
+        Page<TransactionDTO> output =
+                getTransactionsUseCase.execute(
+                        accountIdentity,
+                        page,
+                        size
+                );
 
         return ResponseEntity.ok(
-                TransactionResponse.from(output)
+                output.map(TransactionResponse::from)
         );
     }
 }
