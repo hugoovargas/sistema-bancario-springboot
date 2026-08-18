@@ -3,11 +3,13 @@ package com.banco.bank_system.useCase.accountUseCaseTests;
 import com.banco.bank_system.application.account.dto.CreateAccountOutput;
 import com.banco.bank_system.application.account.port.AccountRepositoryPort;
 import com.banco.bank_system.application.account.usecases.CreateAccountUseCase;
+import com.banco.bank_system.application.account.util.UniqueAccountIdentityGenerator;
 import com.banco.bank_system.application.client.port.ClientRepositoryPort;
 import com.banco.bank_system.application.exception.ClientNotFoundException;
 import com.banco.bank_system.domain.entities.Account;
 import com.banco.bank_system.domain.entities.Client;
 import com.banco.bank_system.domain.enums.AccountType;
+import com.banco.bank_system.domain.valueobject.AccountIdentity;
 import com.banco.bank_system.domain.valueobject.CPF;
 import com.banco.bank_system.useCase.clientUseCaseTests.helper.ClientFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +37,9 @@ class CreateAccountUseCaseTest {
     @Mock
     private AccountRepositoryPort accountRepository;
 
+    @Mock
+    private UniqueAccountIdentityGenerator uniqueAccountIdentityGenerator;
+
     private CreateAccountUseCase useCase;
 
     private Client client;
@@ -52,6 +57,7 @@ class CreateAccountUseCaseTest {
         useCase = new CreateAccountUseCase(
                 accountRepository,
                 clientRepository,
+                uniqueAccountIdentityGenerator,
                 clock);
     }
 
@@ -61,8 +67,10 @@ class CreateAccountUseCaseTest {
         when(clientRepository.getClientByCpf(client.getCpf()))
                 .thenReturn(Optional.of(client));
 
-        when(accountRepository.existsByAccountIdentity(any()))
-                .thenReturn(false);
+        when(uniqueAccountIdentityGenerator.generate())
+                .thenReturn(
+                        new AccountIdentity("01", "123456-1")
+                );
 
         CreateAccountOutput output =
                 useCase.execute(client.getCpf(), AccountType.CHECKING);
@@ -70,8 +78,11 @@ class CreateAccountUseCaseTest {
         assertEquals(client.getId(), output.clientId());
 
         verify(clientRepository).getClientByCpf(client.getCpf());
-        verify(accountRepository).existsByAccountIdentity(any());
+
+        verify(uniqueAccountIdentityGenerator).generate();
+
         verify(accountRepository).save(any(Account.class));
+
         verifyNoMoreInteractions(accountRepository);
     }
 

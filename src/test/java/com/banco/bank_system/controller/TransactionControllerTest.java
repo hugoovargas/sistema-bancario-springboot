@@ -27,6 +27,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -102,7 +103,6 @@ class TransactionControllerTest {
                         any(Money.class)
                 );
     }
-
 
     @Test
     void shouldWithdraw() throws Exception {
@@ -206,7 +206,7 @@ class TransactionControllerTest {
                                         null,
                                         "01",
                                         "123456-1",
-                                        LocalDateTime.of(2026,1,10,10,0)
+                                        LocalDateTime.of(2026, 1, 10, 10, 0)
                                 ),
                                 new TransactionDTO(
                                         new TransactionId(UUID.randomUUID()),
@@ -217,9 +217,11 @@ class TransactionControllerTest {
                                         "123456-1",
                                         null,
                                         null,
-                                        LocalDateTime.of(2026,1,10,11,0)
+                                        LocalDateTime.of(2026, 1, 10, 11, 0)
                                 )
-                        )
+                        ),
+                        PageRequest.of(0, 10),
+                        2
                 );
 
         when(getTransactionsUseCase.execute(
@@ -243,11 +245,14 @@ class TransactionControllerTest {
                 .andExpect(jsonPath("$.content[1].source_branch").value("01"))
                 .andExpect(jsonPath("$.content[1].source_accountNumber").value("123456-1"))
 
-                // Informações da paginação
                 .andExpect(jsonPath("$.number").value(0))
-                .andExpect(jsonPath("$.size").value(2))
+                .andExpect(jsonPath("$.size").value(10))
                 .andExpect(jsonPath("$.totalElements").value(2))
-                .andExpect(jsonPath("$.totalPages").value(1));
+                .andExpect(jsonPath("$.totalPages").value(1))
+                .andExpect(jsonPath("$.first").value(true))
+                .andExpect(jsonPath("$.last").value(true))
+                .andExpect(jsonPath("$.numberOfElements").value(2))
+                .andExpect(jsonPath("$.empty").value(false));
 
         verify(getTransactionsUseCase)
                 .execute(
