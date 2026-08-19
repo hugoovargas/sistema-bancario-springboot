@@ -1,10 +1,10 @@
-package com.banco.bank_system.useCase.transactionsUseCaseTests;
+package com.banco.bank_system.useCase.transaction;
 
 import com.banco.bank_system.application.account.port.AccountRepositoryPort;
 import com.banco.bank_system.application.account.util.AccountFinder;
-import com.banco.bank_system.application.transaction.dto.WithdrawOutput;
+import com.banco.bank_system.application.transaction.dto.DepositOutput;
 import com.banco.bank_system.application.transaction.port.TransactionRepositoryPort;
-import com.banco.bank_system.application.transaction.usecases.WithdrawUseCase;
+import com.banco.bank_system.application.transaction.usecases.DepositUseCase;
 import com.banco.bank_system.domain.entities.CheckingAccount;
 import com.banco.bank_system.domain.entities.Transaction;
 import com.banco.bank_system.domain.enums.TransactionType;
@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class WithdrawUseCaseTest {
+public class DepositUseCaseTest {
 
     @Mock
     private TransactionRepositoryPort transactionRepository;
@@ -38,7 +38,7 @@ public class WithdrawUseCaseTest {
     @Mock
     private AccountFinder accountFinder;
 
-    private WithdrawUseCase useCase;
+    private DepositUseCase useCase;
 
     private Clock clock;
 
@@ -50,7 +50,7 @@ public class WithdrawUseCaseTest {
                 ZoneOffset.UTC
         );
 
-        useCase = new WithdrawUseCase(
+        useCase = new DepositUseCase(
                 transactionRepository,
                 accountRepository,
                 accountFinder,
@@ -59,7 +59,7 @@ public class WithdrawUseCaseTest {
     }
 
     @Test
-    void shouldWithdraw() {
+    void shouldDeposit() {
 
         // Arrange
 
@@ -71,11 +71,11 @@ public class WithdrawUseCaseTest {
 
         // Act
 
-
-        WithdrawOutput output = useCase.execute(
-                account.getAccountIdentity(),
-                Money.of("500")
-        );
+        DepositOutput output =
+                useCase.execute(
+                        account.getAccountIdentity(),
+                        Money.of("500")
+                );
 
         // Assert
 
@@ -93,27 +93,21 @@ public class WithdrawUseCaseTest {
 
         Transaction transaction = captor.getValue();
 
-        assertEquals(TransactionType.WITHDRAW, transaction.getType());
+        assertEquals(TransactionType.DEPOSIT, transaction.getType());
         assertEquals(Money.of("500"), transaction.getAmount());
         assertEquals(account.getId(), transaction.getAccountId());
-        assertEquals(
-                account.getAccountIdentity(),
-                transaction.getSource()
-        );
-
-        assertNull(
-                transaction.getDestination()
-        );
+        assertEquals(account.getAccountIdentity(), transaction.getDestination());
+        assertNull(transaction.getSource());
         assertEquals(
                 LocalDateTime.of(2026, 1, 10, 10, 0),
                 transaction.getDateTime()
         );
 
-        assertEquals(Money.of("500"), output.withdrawnAmount());
-        assertEquals(Money.of("-500"), account.getBalance());
+        assertEquals(Money.of("500"), output.depositedAmount());
+        assertEquals(Money.of("500"), account.getBalance());
         assertEquals(
                 Money.of("500"),
-                output.withdrawnAmount()
+                output.depositedAmount()
         );
 
         verifyNoMoreInteractions(accountFinder);
