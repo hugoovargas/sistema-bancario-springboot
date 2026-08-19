@@ -17,10 +17,6 @@ import com.banco.bank_system.presentation.dto.request.transactions.TransferReque
 import com.banco.bank_system.presentation.dto.request.transactions.WithdrawRequest;
 import com.banco.bank_system.presentation.util.CurrencyFormatter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -190,6 +186,7 @@ class TransactionControllerTest {
                         any(Money.class)
                 );
     }
+
 
     @Test
     void shouldReturnTransactions() throws Exception {

@@ -1,5 +1,6 @@
 package com.banco.bank_system.presentation.controller;
 
+
 import com.banco.bank_system.application.transaction.dto.DepositOutput;
 import com.banco.bank_system.application.transaction.dto.TransactionDTO;
 import com.banco.bank_system.application.transaction.dto.TransferOutput;
@@ -23,11 +24,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping("/transactions")
@@ -53,6 +52,7 @@ public class TransactionController {
         this.getTransactionsUseCase = getAccountTransactionsUseCase;
         this.transferUseCase = transferUseCase;
     }
+
 
     @Operation(
             summary = "Realizar depósito",
@@ -81,6 +81,7 @@ public class TransactionController {
         );
     }
 
+
     @Operation(
             summary = "Realizar saque",
             description = "Realiza um saque em uma conta."
@@ -107,6 +108,7 @@ public class TransactionController {
                 WithdrawResponse.from(output)
         );
     }
+
 
     @Operation(
             summary = "Realizar transferência",
@@ -138,6 +140,7 @@ public class TransactionController {
                 TransferResponse.from(output)
         );
     }
+
 
     @Operation(
             summary = "Consultar extrato",
