@@ -1,5 +1,6 @@
 package com.banco.bank_system.domain.entities;
 
+import com.banco.bank_system.domain.enums.AccountType;
 import com.banco.bank_system.domain.valueobject.AccountId;
 import com.banco.bank_system.domain.valueobject.AccountIdentity;
 import com.banco.bank_system.domain.valueobject.ClientId;
@@ -67,5 +68,10 @@ public class CheckingAccount extends Account {
     @Override
     protected Money minimumAllowedBalance() {
         return OVERDRAFT_LIMIT.negate();
+    }
+
+    @Override
+    public AccountType getType() {
+        return AccountType.CHECKING;
     }
 }
