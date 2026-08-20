@@ -8,7 +8,7 @@ import com.banco.bank_system.entities.helper.AccountFactory;
 import com.banco.bank_system.infrastructure.database.entities.ClientEntity;
 import com.banco.bank_system.infrastructure.database.sql.JpaAccountRepository;
 import com.banco.bank_system.infrastructure.database.sql.JpaClientRepository;
-import com.banco.bank_system.infrastructure.mapper.AccountMapper;
+import com.banco.bank_system.infrastructure.database.mapper.AccountMapper;
 import com.banco.bank_system.presentation.dto.request.account.CreateAccountRequest;
 import com.banco.bank_system.useCase.client.helper.ClientFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
