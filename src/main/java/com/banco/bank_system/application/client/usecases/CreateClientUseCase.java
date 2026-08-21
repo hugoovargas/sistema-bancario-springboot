@@ -29,7 +29,8 @@ public class CreateClientUseCase {
             Email email
     ){
 
-        validator.validate(cpf, email);
+        validator.validateIfCpfIsNotSignedUp(cpf);
+        validator.validateIfEmailIsNotSignedUp(email);
 
         Client client = Client.create(name, cpf, email);
 

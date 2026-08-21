@@ -4,6 +4,7 @@ import com.banco.bank_system.application.client.dto.GetClientDataOutput;
 import com.banco.bank_system.application.client.port.ClientRepositoryPort;
 import com.banco.bank_system.application.client.usecases.ChangeClientEmailUseCase;
 import com.banco.bank_system.application.client.util.ClientFinder;
+import com.banco.bank_system.application.client.util.ClientUniquenessValidator;
 import com.banco.bank_system.domain.entities.Client;
 import com.banco.bank_system.domain.valueobject.Email;
 import com.banco.bank_system.useCase.client.helper.ClientFactory;
@@ -14,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,6 +25,9 @@ public class ChangeClientEmailUseCaseTest {
 
     @Mock
     private ClientFinder clientFinder;
+
+    @Mock
+    private ClientUniquenessValidator validator;
 
     @InjectMocks
     private ChangeClientEmailUseCase useCase;
@@ -51,6 +54,8 @@ public class ChangeClientEmailUseCaseTest {
                 newEmail,
                 output.email()
         );
+
+        verify(validator).validateIfEmailIsAvailable(client.getEmail(), client.getId());
 
         verify(clientFinder)
                 .find(client.getCpf());

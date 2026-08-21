@@ -51,6 +51,11 @@ public class ClientRepositoryAdapter
         );
     }
 
+    @Override
+    public boolean existsByEmailAndIdNot(Email email, ClientId clientId) {
+        return repository.existsByEmailAndIdNot(email.value(), clientId.id());
+    }
+
 
     @Override
     public boolean existsByCpf(

@@ -44,6 +44,8 @@ public class ClientController {
         this.removeClientUseCase = removeClientUseCase;
     }
 
+
+
     @Operation(
             summary = "Cadastrar cliente",
             description = "Realiza o cadastro de um novo cliente."
@@ -67,6 +69,8 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CreateClientResponse.from(output));
     }
+
+
 
 
     @Operation(
@@ -96,6 +100,8 @@ public class ClientController {
                 ClientDataResponse.from(output)
         );
     }
+
+
 
     @Operation(
             summary = "Atualizar o nome do cliente",
@@ -128,6 +134,9 @@ public class ClientController {
         );
     }
 
+
+
+
     @Operation(
             summary = "Atualizar o email do cliente",
             description = "Altera o e-mail de um cliente."
@@ -159,6 +168,9 @@ public class ClientController {
                 ClientDataResponse.from(output)
         );
     }
+
+
+
 
     @Operation(
             summary = "Remover cliente",

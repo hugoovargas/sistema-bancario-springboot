@@ -18,6 +18,8 @@ public interface ClientRepositoryPort {
 
     boolean existsByEmail(Email newEmail);
 
+    boolean existsByEmailAndIdNot(Email email, ClientId clientId);
+
     boolean existsByCpf(CPF cpf);
 
     boolean existsById(ClientId clientId);

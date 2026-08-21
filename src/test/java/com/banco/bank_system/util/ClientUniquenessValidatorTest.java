@@ -38,7 +38,11 @@ class ClientUniquenessValidatorTest {
                 .thenReturn(false);
 
         assertDoesNotThrow(() ->
-                validator.validate(cpf, email)
+                validator.validateIfCpfIsNotSignedUp(cpf)
+        );
+
+        assertDoesNotThrow(() ->
+                validator.validateIfEmailIsNotSignedUp(email)
         );
 
         verify(clientRepository)
@@ -58,7 +62,7 @@ class ClientUniquenessValidatorTest {
 
         assertThrows(
                 CpfAlreadyExistsException.class,
-                () -> validator.validate(cpf, email)
+                () -> validator.validateIfCpfIsNotSignedUp(cpf)
         );
 
         verify(clientRepository)
@@ -73,19 +77,13 @@ class ClientUniquenessValidatorTest {
     @Test
     void shouldThrowExceptionWhenEmailAlreadyExists() {
 
-        when(clientRepository.existsByCpf(cpf))
-                .thenReturn(false);
-
         when(clientRepository.existsByEmail(email))
                 .thenReturn(true);
 
         assertThrows(
                 EmailAlreadyExistsException.class,
-                () -> validator.validate(cpf, email)
+                () -> validator.validateIfEmailIsNotSignedUp(email)
         );
-
-        verify(clientRepository)
-                .existsByCpf(cpf);
 
         verify(clientRepository)
                 .existsByEmail(email);

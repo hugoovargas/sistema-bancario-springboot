@@ -40,8 +40,8 @@ class CreateClientUseCaseTest {
         CreateClientOutput output =
                 useCase.execute(name, cpf, email);
 
-        verify(validator)
-                .validate(cpf, email);
+        verify(validator).validateIfCpfIsNotSignedUp(cpf);
+        verify(validator).validateIfEmailIsNotSignedUp(email);
 
         verify(clientRepository)
                 .save(any(Client.class));

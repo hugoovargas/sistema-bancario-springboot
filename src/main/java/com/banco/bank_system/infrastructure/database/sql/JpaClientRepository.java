@@ -1,5 +1,7 @@
 package com.banco.bank_system.infrastructure.database.sql;
 
+import com.banco.bank_system.domain.valueobject.ClientId;
+import com.banco.bank_system.domain.valueobject.Email;
 import com.banco.bank_system.infrastructure.database.entities.ClientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,10 +14,9 @@ public interface JpaClientRepository
 
     Optional<ClientEntity> findByCpf(String cpf);
 
-
     boolean existsByCpf(String cpf);
-
 
     boolean existsByEmail(String email);
 
+    boolean existsByEmailAndIdNot(String email, UUID clientId);
 }

@@ -13,12 +13,11 @@ public record DepositResponse(
         UUID transactionId,
         String transactionDate
 ) {
-
     public static DepositResponse from(DepositOutput output){
         return new DepositResponse(
                 output.accountId().id(),
                 CurrencyFormatter.format(output.depositedAmount()),
-                output.newBalance().value().toString(),
+                CurrencyFormatter.format(output.newBalance()),
                 output.transactionId().id(),
                 DateFormatter.format(output.transactionDate())
         );
