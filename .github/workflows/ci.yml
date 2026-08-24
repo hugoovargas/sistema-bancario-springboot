@@ -4,47 +4,49 @@ on:
   push:
     branches:
       - main
-      - master
 
   pull_request:
     branches:
       - main
-      - master
+
+permissions:
+  contents: write
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java 21
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
           java-version: '21'
+          distribution: 'temurin'
           cache: maven
 
-      - name: Run tests and JaCoCo
-        run: mvn -B clean verify
+      - name: Build and run tests
+        run: mvn clean verify
 
-      - name: Generate JaCoCo badge
-        uses: cicirello/jacoco-badge-generator@v2
-        with:
-          jacoco-csv-file: target/site/jacoco/jacoco.csv
-          badges-directory: .github/badges
+      - name: Generate JaCoCo report
+        run: mvn jacoco:report
 
       - name: Upload JaCoCo Report
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: target/site/jacoco
+          path: target/site/jacoco/
 
-      - name: Upload coverage badges
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Generate JaCoCo Badges
+        uses: cicirello/jacoco-badge-generator@v2
         with:
-          name: coverage-badges
-          path: .github/badges
+          generate-branches-badge: true
+          badges-directory: badges
+
+      - name: Commit coverage badges
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "ci: update JaCoCo coverage badges"
