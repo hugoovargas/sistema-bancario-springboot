@@ -18,7 +18,7 @@ import com.banco.bank_system.presentation.dto.request.transactions.DepositReques
 import com.banco.bank_system.presentation.dto.request.transactions.TransferRequest;
 import com.banco.bank_system.presentation.dto.request.transactions.WithdrawRequest;
 import com.banco.bank_system.presentation.util.CurrencyFormatter;
-import com.banco.bank_system.useCase.client.helper.ClientFactory;
+import com.banco.bank_system.entities.helper.ClientFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +36,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
@@ -87,11 +88,9 @@ class TransactionIntegrationTest {
                         "500"
                 );
 
-        String expectedAmount =
-                CurrencyFormatter.format(Money.of("500"));
+        String expectedAmount = CurrencyFormatter.format(Money.of("500"));
 
-        String expectedBalance =
-                CurrencyFormatter.format(Money.of("500"));
+        String expectedBalance = CurrencyFormatter.format(Money.of("500"));
 
         mockMvc.perform(
                         post("/transactions/deposits")
@@ -101,14 +100,10 @@ class TransactionIntegrationTest {
                                 )
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.depositedAmount")
-                        .value(expectedAmount))
-                .andExpect(jsonPath("$.newBalance")
-                        .value(expectedBalance))
-                .andExpect(jsonPath("$.transactionId")
-                        .exists())
-                .andExpect(jsonPath("$.transactionDate")
-                        .value("10/01/2026 10:00:00"));
+                .andExpect(jsonPath("$.depositedAmount").value(expectedAmount))
+                .andExpect(jsonPath("$.newBalance").value(expectedBalance))
+                .andExpect(jsonPath("$.transactionId").exists())
+                .andExpect(jsonPath("$.transactionDate").value("10/01/2026 10:00:00"));
 
         assertEquals(1, transactionRepository.count());
 
@@ -155,11 +150,9 @@ class TransactionIntegrationTest {
                         "300"
                 );
 
-        String expectedAmount =
-                CurrencyFormatter.format(Money.of("300"));
+        String expectedAmount = CurrencyFormatter.format(Money.of("300"));
 
-        String expectedBalance =
-                CurrencyFormatter.format(Money.of("700"));
+        String expectedBalance = CurrencyFormatter.format(Money.of("700"));
 
         mockMvc.perform(
                         post("/transactions/withdrawals")
@@ -169,14 +162,10 @@ class TransactionIntegrationTest {
                                 )
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.withdrawnAmount")
-                        .value(expectedAmount))
-                .andExpect(jsonPath("$.newBalance")
-                        .value(expectedBalance))
-                .andExpect(jsonPath("$.transactionId")
-                        .exists())
-                .andExpect(jsonPath("$.transactionDate")
-                        .value("10/01/2026 10:00:00"));
+                .andExpect(jsonPath("$.withdrawnAmount").value(expectedAmount))
+                .andExpect(jsonPath("$.newBalance").value(expectedBalance))
+                .andExpect(jsonPath("$.transactionId").exists())
+                .andExpect(jsonPath("$.transactionDate").value("10/01/2026 10:00:00"));
 
         assertEquals(1, transactionRepository.count());
 
@@ -235,8 +224,7 @@ class TransactionIntegrationTest {
                         "500"
                 );
 
-        String expectedAmount =
-                CurrencyFormatter.format(Money.of("500"));
+        String expectedAmount = CurrencyFormatter.format(Money.of("500"));
 
         mockMvc.perform(
                         post("/transactions/transfers")
@@ -246,30 +234,23 @@ class TransactionIntegrationTest {
                                 )
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.amount")
-                        .value(expectedAmount))
-                .andExpect(jsonPath("$.operationId")
-                        .exists())
-                .andExpect(jsonPath("$.transactionDate")
-                        .value("10/01/2026 10:00:00"));
+                .andExpect(jsonPath("$.amount").value(expectedAmount))
+                .andExpect(jsonPath("$.operationId").exists())
+                .andExpect(jsonPath("$.transactionDate").value("10/01/2026 10:00:00"));
 
         assertEquals(2, transactionRepository.count());
 
-        AccountEntity persistedSource =
-                accountRepository
-                        .findByAccountNumberAndBranch(
-                                source.getAccountIdentity().accountNumber(),
-                                source.getAccountIdentity().branch()
-                        )
-                        .orElseThrow();
+        AccountEntity persistedSource = accountRepository.findByAccountNumberAndBranch(
+                        source.getAccountIdentity().accountNumber(),
+                        source.getAccountIdentity().branch()
+                )
+                .orElseThrow();
 
-        AccountEntity persistedDestination =
-                accountRepository
-                        .findByAccountNumberAndBranch(
-                                destination.getAccountIdentity().accountNumber(),
-                                destination.getAccountIdentity().branch()
-                        )
-                        .orElseThrow();
+        AccountEntity persistedDestination = accountRepository.findByAccountNumberAndBranch(
+                        destination.getAccountIdentity().accountNumber(),
+                        destination.getAccountIdentity().branch()
+                )
+                .orElseThrow();
 
         assertEquals(
                 Money.of("500").value(),
@@ -322,16 +303,11 @@ class TransactionIntegrationTest {
                         )
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].type")
-                        .value("DEPOSIT"))
-                .andExpect(jsonPath("$.content[0].amount")
-                        .exists())
-                .andExpect(jsonPath("$.content[0].dateTime")
-                        .value("10/01/2026 10:00:00"))
-                .andExpect(jsonPath("$.totalElements")
-                        .value(1))
-                .andExpect(jsonPath("$.totalPages")
-                        .value(1));
+                .andExpect(jsonPath("$.content[0].type").value("DEPOSIT"))
+                .andExpect(jsonPath("$.content[0].amount").exists())
+                .andExpect(jsonPath("$.content[0].dateTime").value("10/01/2026 10:00:00"))
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.totalPages").value(1));
     }
 
 
@@ -354,8 +330,7 @@ class TransactionIntegrationTest {
                                 )
                 )
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code")
-                        .value("ACCOUNT_NOT_FOUND"));
+                .andExpect(jsonPath("$.code").value("ACCOUNT_NOT_FOUND"));
 
         assertEquals(0, transactionRepository.count());
     }
@@ -380,8 +355,7 @@ class TransactionIntegrationTest {
                                 )
                 )
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code")
-                        .value("ACCOUNT_NOT_FOUND"));
+                .andExpect(jsonPath("$.code").value("ACCOUNT_NOT_FOUND"));
 
         assertEquals(0, transactionRepository.count());
     }
@@ -408,8 +382,7 @@ class TransactionIntegrationTest {
                                 )
                 )
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code")
-                        .value("ACCOUNT_NOT_FOUND"));
+                .andExpect(jsonPath("$.code").value("ACCOUNT_NOT_FOUND"));
 
         assertEquals(0, transactionRepository.count());
     }
@@ -450,8 +423,7 @@ class TransactionIntegrationTest {
                                 )
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code")
-                        .value("INSUFFICIENT_BALANCE"));
+                .andExpect(jsonPath("$.code").value("INSUFFICIENT_BALANCE"));
 
         assertEquals(0, transactionRepository.count());
     }

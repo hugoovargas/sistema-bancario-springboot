@@ -55,6 +55,8 @@ class GetTransactionsUseCaseTest {
     @Test
     void shouldReturnTransactions() {
 
+        // Arrange
+
         CheckingAccount account =
                 AccountFactory.checking(clock);
 
@@ -85,12 +87,16 @@ class GetTransactionsUseCaseTest {
                 any(Pageable.class)
         )).thenReturn(transactions);
 
+        // Act
+
         Page<TransactionDTO> output =
                 useCase.execute(
                         account.getAccountIdentity(),
                         0,
                         10
                 );
+
+        // Assert
 
         verify(accountFinder)
                 .byIdentity(account.getAccountIdentity());
@@ -127,6 +133,8 @@ class GetTransactionsUseCaseTest {
     @Test
     void shouldReturnEmptyListWhenAccountHasNoTransactions() {
 
+        // Arrange
+
         CheckingAccount account =
                 AccountFactory.checking(clock);
 
@@ -138,12 +146,16 @@ class GetTransactionsUseCaseTest {
                 any(Pageable.class)
         )).thenReturn(Page.empty());
 
+        // Act
+
         Page<TransactionDTO> output =
                 useCase.execute(
                         account.getAccountIdentity(),
                         0,
                         10
                 );
+
+        // Assert
 
         verify(accountFinder)
                 .byIdentity(account.getAccountIdentity());

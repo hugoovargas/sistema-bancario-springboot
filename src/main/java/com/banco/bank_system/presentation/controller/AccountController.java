@@ -82,7 +82,6 @@ public class AccountController {
     })
     @GetMapping("/{cpf}")
     public ResponseEntity<GetClientAccountsResponse> getAccounts(
-
             @Parameter(
                     description = "CPF do cliente",
                     example = "52998224725"

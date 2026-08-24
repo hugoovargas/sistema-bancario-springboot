@@ -8,7 +8,7 @@ import com.banco.bank_system.infrastructure.database.adapters.ClientRepositoryAd
 import com.banco.bank_system.infrastructure.database.entities.ClientEntity;
 import com.banco.bank_system.infrastructure.database.mapper.ClientMapper;
 import com.banco.bank_system.infrastructure.database.sql.JpaClientRepository;
-import com.banco.bank_system.useCase.client.helper.ClientFactory;
+import com.banco.bank_system.entities.helper.ClientFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

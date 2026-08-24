@@ -13,7 +13,7 @@ import com.banco.bank_system.infrastructure.database.sql.JpaAccountRepository;
 import com.banco.bank_system.infrastructure.database.sql.JpaClientRepository;
 import com.banco.bank_system.presentation.dto.request.account.CreateAccountRequest;
 import com.banco.bank_system.presentation.util.CurrencyFormatter;
-import com.banco.bank_system.useCase.client.helper.ClientFactory;
+import com.banco.bank_system.entities.helper.ClientFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,13 +74,11 @@ class AccountIntegrationTest {
                                 .content(objectMapper.writeValueAsString(request))
                 )
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.clientId")
-                        .value(client.getId().id().toString()));
+                .andExpect(jsonPath("$.clientId").value(client.getId().id().toString()));
 
         assertEquals(1, accountRepository.count());
 
-        AccountEntity entity =
-                accountRepository.findAll().getFirst();
+        AccountEntity entity = accountRepository.findAll().getFirst();
 
         assertEquals(
                 client.getId().id(),
@@ -124,8 +122,7 @@ class AccountIntegrationTest {
 
         assertEquals(1, accountRepository.count());
 
-        AccountEntity entity =
-                accountRepository.findAll().getFirst();
+        AccountEntity entity = accountRepository.findAll().getFirst();
 
         assertEquals(
                 client.getId().id(),
@@ -135,6 +132,11 @@ class AccountIntegrationTest {
         assertEquals(
                 AccountType.SAVINGS,
                 entity.getAccountType()
+        );
+
+        assertEquals(
+                Money.ZERO.value(),
+                entity.getBalance()
         );
     }
 
@@ -213,10 +215,8 @@ class AccountIntegrationTest {
                                 account.getAccountIdentity().accountNumber())
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.branch")
-                        .value(account.getAccountIdentity().branch()))
-                .andExpect(jsonPath("$.accountNumber")
-                        .value(account.getAccountIdentity().accountNumber()));
+                .andExpect(jsonPath("$.branch").value(account.getAccountIdentity().branch()))
+                .andExpect(jsonPath("$.accountNumber").value(account.getAccountIdentity().accountNumber()));
     }
 
     @Test

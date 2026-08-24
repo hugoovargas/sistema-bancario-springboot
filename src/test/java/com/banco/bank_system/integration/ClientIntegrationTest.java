@@ -10,7 +10,7 @@ import com.banco.bank_system.infrastructure.database.sql.JpaClientRepository;
 import com.banco.bank_system.presentation.dto.request.client.ChangeClientEmailRequest;
 import com.banco.bank_system.presentation.dto.request.client.ChangeClientNameRequest;
 import com.banco.bank_system.presentation.dto.request.client.CreateClientRequest;
-import com.banco.bank_system.useCase.client.helper.ClientFactory;
+import com.banco.bank_system.entities.helper.ClientFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,12 +82,9 @@ class ClientIntegrationTest {
                         get("/clients/" + client.getCpf().value())
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name")
-                        .value(client.getName().value()))
-                .andExpect(jsonPath("$.cpf")
-                        .value(client.getCpf().value()))
-                .andExpect(jsonPath("$.email")
-                        .value(client.getEmail().value()));
+                .andExpect(jsonPath("$.name").value(client.getName().value()))
+                .andExpect(jsonPath("$.cpf").value(client.getCpf().value()))
+                .andExpect(jsonPath("$.email").value(client.getEmail().value()));
     }
 
     @Test
@@ -99,8 +96,7 @@ class ClientIntegrationTest {
                 ClientMapper.fromDomain(client)
         );
 
-        ChangeClientNameRequest request =
-                new ChangeClientNameRequest("Novo Nome");
+        ChangeClientNameRequest request = new ChangeClientNameRequest("Novo Nome");
 
         mockMvc.perform(
                         patch("/clients/" + client.getCpf().value() + "/name")
@@ -110,8 +106,7 @@ class ClientIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Novo Nome"));
 
-        ClientEntity updated =
-                clientRepository.findByCpf(client.getCpf().value()).orElseThrow();
+        ClientEntity updated = clientRepository.findByCpf(client.getCpf().value()).orElseThrow();
 
         assertEquals("Novo Nome", updated.getName());
     }
@@ -195,8 +190,7 @@ class ClientIntegrationTest {
                                 .content(objectMapper.writeValueAsString(request))
                 )
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.code")
-                        .value("CPF_ALREADY_EXISTS"));
+                .andExpect(jsonPath("$.code").value("CPF_ALREADY_EXISTS"));
     }
 
     @Test
@@ -221,8 +215,7 @@ class ClientIntegrationTest {
                                 .content(objectMapper.writeValueAsString(request))
                 )
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.code")
-                        .value("EMAIL_ALREADY_EXISTS"));
+                .andExpect(jsonPath("$.code").value("EMAIL_ALREADY_EXISTS"));
     }
 
     @Test
@@ -243,8 +236,7 @@ class ClientIntegrationTest {
                                 )
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code")
-                        .value("INVALID_CPF"));
+                .andExpect(jsonPath("$.code").value("INVALID_CPF"));
     }
 
     @Test
@@ -265,8 +257,7 @@ class ClientIntegrationTest {
                                 )
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code")
-                        .value("VALIDATION_ERROR"));
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"));
     }
 
     @Test
@@ -287,8 +278,7 @@ class ClientIntegrationTest {
                                 )
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code")
-                        .value("INVALID_NAME"));
+                .andExpect(jsonPath("$.code").value("INVALID_NAME"));
     }
 
     @Test
@@ -309,8 +299,7 @@ class ClientIntegrationTest {
                                 )
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code")
-                        .value("VALIDATION_ERROR"));
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"));
     }
 
     @Test
@@ -331,19 +320,17 @@ class ClientIntegrationTest {
                                 )
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code")
-                        .value("INVALID_EMAIL"));
+                .andExpect(jsonPath("$.code").value("INVALID_EMAIL"));
     }
 
     @Test
     void shouldReturn400WhenEmailIsBlank() throws Exception {
 
-        CreateClientRequest request =
-                new CreateClientRequest(
-                        "Hugo",
-                        "52998224725",
-                        ""
-                );
+        CreateClientRequest request = new CreateClientRequest(
+                "Hugo",
+                "52998224725",
+                ""
+        );
 
         mockMvc.perform(
                         post("/clients")
@@ -353,8 +340,7 @@ class ClientIntegrationTest {
                                 )
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code")
-                        .value("VALIDATION_ERROR"));
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"));
     }
 
     @Test
@@ -366,10 +352,7 @@ class ClientIntegrationTest {
                 ClientMapper.fromDomain(client)
         );
 
-        ChangeClientNameRequest request =
-                new ChangeClientNameRequest(
-                        client.getName().value()
-                );
+        ChangeClientNameRequest request = new ChangeClientNameRequest(client.getName().value());
 
         mockMvc.perform(
                         patch("/clients/" + client.getCpf().value() + "/name")
@@ -379,8 +362,7 @@ class ClientIntegrationTest {
                                 )
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code")
-                        .value("INVALID_CLIENT_CHANGE"));
+                .andExpect(jsonPath("$.code").value("INVALID_CLIENT_CHANGE"));
     }
 
     @Test
@@ -392,10 +374,7 @@ class ClientIntegrationTest {
                 ClientMapper.fromDomain(client)
         );
 
-        ChangeClientEmailRequest request =
-                new ChangeClientEmailRequest(
-                        client.getEmail().value()
-                );
+        ChangeClientEmailRequest request = new ChangeClientEmailRequest(client.getEmail().value());
 
         mockMvc.perform(
                         patch("/clients/" + client.getCpf().value() + "/email")
@@ -405,8 +384,7 @@ class ClientIntegrationTest {
                                 )
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code")
-                        .value("INVALID_CLIENT_CHANGE"));
+                .andExpect(jsonPath("$.code").value("INVALID_CLIENT_CHANGE"));
     }
 
     @Test
@@ -428,10 +406,7 @@ class ClientIntegrationTest {
                 ClientMapper.fromDomain(secondClient)
         );
 
-        ChangeClientEmailRequest request =
-                new ChangeClientEmailRequest(
-                        secondClient.getEmail().value()
-                );
+        ChangeClientEmailRequest request = new ChangeClientEmailRequest(secondClient.getEmail().value());
 
         mockMvc.perform(
                         patch("/clients/" + firstClient.getCpf().value() + "/email")
@@ -441,7 +416,6 @@ class ClientIntegrationTest {
                                 )
                 )
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.code")
-                        .value("EMAIL_ALREADY_EXISTS"));
+                .andExpect(jsonPath("$.code").value("EMAIL_ALREADY_EXISTS"));
     }
 }

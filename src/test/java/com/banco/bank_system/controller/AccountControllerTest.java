@@ -92,7 +92,8 @@ class AccountControllerTest {
                 )
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.branch").value("01"))
-                .andExpect(jsonPath("$.accountNumber").value("123456-1"));
+                .andExpect(jsonPath("$.accountNumber").value("123456-1"))
+                .andExpect(jsonPath("$.createdAt").value("10/01/2026 10:00:00"));
 
         verify(createAccountUseCase)
                 .execute(any(CPF.class), any(AccountType.class));
@@ -167,7 +168,8 @@ class AccountControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.branch").value("01"))
-                .andExpect(jsonPath("$.accountNumber").value("123456-1"));
+                .andExpect(jsonPath("$.accountNumber").value("123456-1"))
+                .andExpect(jsonPath("$.createdAt").value("10/01/2026 10:00:00"));
 
         verify(getClientAccountUseCase)
                 .execute(any(AccountIdentity.class));

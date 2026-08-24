@@ -11,7 +11,7 @@ import com.banco.bank_system.infrastructure.database.entities.AccountEntity;
 import com.banco.bank_system.infrastructure.database.mapper.ClientMapper;
 import com.banco.bank_system.infrastructure.database.sql.JpaAccountRepository;
 import com.banco.bank_system.infrastructure.database.sql.JpaClientRepository;
-import com.banco.bank_system.useCase.client.helper.ClientFactory;
+import com.banco.bank_system.entities.helper.ClientFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +96,16 @@ class AccountRepositoryAdapterTest {
                 account.getId(),
                 result.get().getId()
         );
+
+        assertEquals(
+                account.getAccountIdentity(),
+                result.get().getAccountIdentity()
+        );
+
+        assertEquals(
+                account.getType(),
+                result.get().getType()
+        );
     }
 
     @Test
@@ -145,6 +155,12 @@ class AccountRepositoryAdapterTest {
                 AccountFactory.checking(client.getId(), clock);
 
         adapter.save(account);
+
+        assertEquals(1, repository.count());
+
+        assertTrue(
+                repository.existsById(account.getId().id())
+        );
 
         adapter.delete(account.getId());
 

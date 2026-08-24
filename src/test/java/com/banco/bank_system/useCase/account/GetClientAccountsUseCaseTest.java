@@ -7,7 +7,7 @@ import com.banco.bank_system.application.client.util.ClientFinder;
 import com.banco.bank_system.domain.entities.Account;
 import com.banco.bank_system.domain.entities.Client;
 import com.banco.bank_system.entities.helper.AccountFactory;
-import com.banco.bank_system.useCase.client.helper.ClientFactory;
+import com.banco.bank_system.entities.helper.ClientFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

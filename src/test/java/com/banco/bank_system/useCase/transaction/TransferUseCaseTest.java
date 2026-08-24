@@ -66,6 +66,7 @@ public class TransferUseCaseTest {
     void shouldTransfer() {
 
         // Arrange
+
         CheckingAccount from =
                 AccountFactory.checking(clock);
 
@@ -194,6 +195,8 @@ public class TransferUseCaseTest {
     @Test
     void shouldNotAllowTransferWithInsufficientBalance() {
 
+        // Arrange
+
         SavingsAccount from = AccountFactory.savings(clock);
         CheckingAccount to = AccountFactory.checking(clock);
 
@@ -203,6 +206,8 @@ public class TransferUseCaseTest {
         when(accountFinder.byIdentity(to.getAccountIdentity()))
                 .thenReturn(to);
 
+        // Act
+
         assertThrows(
                 InsufficientBalanceException.class,
                 () -> useCase.execute(
@@ -211,6 +216,8 @@ public class TransferUseCaseTest {
                         Money.of("100")
                 )
         );
+
+        // Assert
 
         verify(accountFinder)
                 .byIdentity(from.getAccountIdentity());
@@ -226,6 +233,8 @@ public class TransferUseCaseTest {
     @Test
     void shouldNotAllowNegativeTransferAmount() {
 
+        // Arrange
+
         CheckingAccount from = AccountFactory.checking(clock);
         SavingsAccount to = AccountFactory.savings(clock);
 
@@ -235,6 +244,8 @@ public class TransferUseCaseTest {
         when(accountFinder.byIdentity(to.getAccountIdentity()))
                 .thenReturn(to);
 
+        // Act
+
         assertThrows(
                 InvalidMoneyException.class,
                 () -> useCase.execute(
@@ -243,6 +254,8 @@ public class TransferUseCaseTest {
                         Money.of("-1")
                 )
         );
+
+        // Assert
 
         verify(accountFinder)
                 .byIdentity(from.getAccountIdentity());
@@ -257,6 +270,8 @@ public class TransferUseCaseTest {
     @Test
     void shouldNotAllowZeroTransferAmount() {
 
+        // Arrange
+
         CheckingAccount from = AccountFactory.checking(clock);
         SavingsAccount to = AccountFactory.savings(clock);
 
@@ -266,6 +281,8 @@ public class TransferUseCaseTest {
         when(accountFinder.byIdentity(to.getAccountIdentity()))
                 .thenReturn(to);
 
+        // Act
+
         assertThrows(
                 InvalidMoneyException.class,
                 () -> useCase.execute(
@@ -274,6 +291,8 @@ public class TransferUseCaseTest {
                         Money.ZERO
                 )
         );
+
+        // Assert
 
         verify(accountFinder)
                 .byIdentity(from.getAccountIdentity());

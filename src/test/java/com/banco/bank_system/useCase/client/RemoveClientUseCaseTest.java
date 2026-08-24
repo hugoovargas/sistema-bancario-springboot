@@ -10,7 +10,7 @@ import com.banco.bank_system.domain.entities.CheckingAccount;
 import com.banco.bank_system.domain.entities.Client;
 import com.banco.bank_system.domain.valueobject.Money;
 import com.banco.bank_system.entities.helper.AccountFactory;
-import com.banco.bank_system.useCase.client.helper.ClientFactory;
+import com.banco.bank_system.entities.helper.ClientFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,6 +49,8 @@ public class RemoveClientUseCaseTest {
     @Test
     void shouldRemoveClient() {
 
+        // Arrange
+
         List<Account> accounts = List.of(
                 AccountFactory.checking(Clock.systemUTC()),
                 AccountFactory.savings(Clock.systemUTC())
@@ -61,9 +63,11 @@ public class RemoveClientUseCaseTest {
                 .thenReturn(accounts);
 
         // Act
+
         useCase.execute(client.getCpf());
 
         // Assert
+
         verify(clientFinder)
                 .find(client.getCpf());
 
@@ -83,6 +87,8 @@ public class RemoveClientUseCaseTest {
     @Test
     void shouldThrowExceptionWhenClientAccountHasActiveBalance() {
 
+        // Arrange
+
         CheckingAccount account =
                 AccountFactory.checking(Clock.systemUTC());
 
@@ -94,10 +100,14 @@ public class RemoveClientUseCaseTest {
         when(accountRepository.getAccountsByClient(client.getId()))
                 .thenReturn(List.of(account));
 
+        // Act
+
         assertThrows(
                 CannotRemoveAccountException.class,
                 () -> useCase.execute(client.getCpf())
         );
+
+        // Assert
 
         verify(clientFinder)
                 .find(client.getCpf());

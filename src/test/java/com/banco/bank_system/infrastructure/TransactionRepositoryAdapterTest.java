@@ -14,7 +14,7 @@ import com.banco.bank_system.infrastructure.database.entities.TransactionEntity;
 import com.banco.bank_system.infrastructure.database.mapper.ClientMapper;
 import com.banco.bank_system.infrastructure.database.sql.JpaClientRepository;
 import com.banco.bank_system.infrastructure.database.sql.JpaTransactionRepository;
-import com.banco.bank_system.useCase.client.helper.ClientFactory;
+import com.banco.bank_system.entities.helper.ClientFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,6 +173,8 @@ class TransactionRepositoryAdapterTest {
     @Test
     void shouldSaveTransferSentTransaction() {
 
+        // Arrange
+
         Client client = ClientFactory.create();
         clientRepository.save(ClientMapper.fromDomain(client));
 
@@ -197,9 +199,13 @@ class TransactionRepositoryAdapterTest {
                         clock
                 );
 
+        // Act
+
         adapter.save(transaction);
 
         TransactionEntity entity = repository.findAll().getFirst();
+
+        // Assert
 
         assertEquals(
                 TransactionType.TRANSFER_SENT,
@@ -245,6 +251,8 @@ class TransactionRepositoryAdapterTest {
     @Test
     void shouldSaveTransferReceivedTransaction() {
 
+        // Arrange
+
         Client client = ClientFactory.create();
         clientRepository.save(ClientMapper.fromDomain(client));
 
@@ -269,10 +277,13 @@ class TransactionRepositoryAdapterTest {
                         clock
                 );
 
+        // Act
+
         adapter.save(transaction);
 
-        TransactionEntity entity =
-                repository.findAll().getFirst();
+        TransactionEntity entity = repository.findAll().getFirst();
+
+        // Assert
 
         assertEquals(
                 TransactionType.TRANSFER_RECEIVED,
@@ -318,6 +329,8 @@ class TransactionRepositoryAdapterTest {
     @Test
     void shouldRestoreTransferSentTransaction() {
 
+        // Arrange
+
         Client client = ClientFactory.create();
         clientRepository.save(ClientMapper.fromDomain(client));
 
@@ -342,6 +355,8 @@ class TransactionRepositoryAdapterTest {
                         clock
                 );
 
+        // Act
+
         adapter.save(sent);
 
         Page<Transaction> result =
@@ -349,6 +364,8 @@ class TransactionRepositoryAdapterTest {
                         from.getId(),
                         PageRequest.of(0, 10)
                 );
+
+        // Assert
 
         assertEquals(1, result.getTotalElements());
 
@@ -393,6 +410,8 @@ class TransactionRepositoryAdapterTest {
     @Test
     void shouldRestoreTransferReceivedTransaction() {
 
+        // Arrange
+
         Client client = ClientFactory.create();
         clientRepository.save(ClientMapper.fromDomain(client));
 
@@ -417,6 +436,8 @@ class TransactionRepositoryAdapterTest {
                         clock
                 );
 
+        // Act
+
         adapter.save(received);
 
         Page<Transaction> result =
@@ -424,6 +445,8 @@ class TransactionRepositoryAdapterTest {
                         to.getId(),
                         PageRequest.of(0, 10)
                 );
+
+        // Assert
 
         assertEquals(1, result.getTotalElements());
 
