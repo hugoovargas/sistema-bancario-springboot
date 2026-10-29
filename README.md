@@ -4,9 +4,7 @@ Sistema bancário backend desenvolvido em Java 21 e Spring Boot, com foco em
 Clean Architecture, Domain-Driven Design (DDD), modelagem rica de domínio,
 testes automatizados e boas práticas de engenharia de software.
 
-O projeto simula operações bancárias como gerenciamento de clientes,
-contas correntes e poupanças, depósitos, saques, transferências e consulta
-de transações.
+O projeto simula operações bancárias como gerenciamento de clientes, contas correntes e poupanças, depósitos, saques, transferências e consulta de transações. Também inclui relatórios financeiros desenvolvidos com consultas SQL nativas no PostgreSQL, permitindo analisar movimentações por conta e classificar contas por volume movimentado.
 
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-brightgreen)
@@ -79,6 +77,12 @@ Entre os principais conceitos praticados estão:
 - Cálculo retroativo dos rendimentos após períodos de inatividade.
 - Capitalização dos rendimentos.
 - Registro dos rendimentos como transações no histórico da conta.
+
+### Relatórios e consultas SQL
+
+- Relatório de movimentações por conta, com quantidade e valor total de depósitos, saques, transferências enviadas e transferências recebidas.
+- Ranking de contas por volume movimentado, ordenado do maior para o menor volume.
+- Consultas SQL nativas no PostgreSQL utilizando `JOIN`, `GROUP BY`, `COUNT`, `SUM` e `COALESCE` para relacionar dados, agrupar transações e calcular indicadores.
 
 ### Regras de negócio
 
@@ -163,6 +167,8 @@ Exemplos:
 - Consulta de contas
 - Consulta de transações
 
+Os casos de uso também disponibilizam relatórios de movimentações por conta e ranking de contas por volume movimentado. Para isso, utilizam DTOs e interfaces de persistência (*ports*), mantendo a camada de aplicação desacoplada das consultas SQL e dos detalhes de infraestrutura.
+
 ### Fluxo da aplicação
 
 Uma requisição percorre, de forma simplificada, o seguinte fluxo:
@@ -209,6 +215,8 @@ H2.
 
 As entidades de persistência são separadas das entidades de domínio, com
 mapeamentos realizados através de Mappers.
+
+Para os relatórios, a infraestrutura utiliza consultas SQL nativas no PostgreSQL, com operações de junção (`JOIN`), agrupamento (`GROUP BY`) e agregação (`COUNT` e `SUM`). Os resultados são mapeados por projeções e convertidos em DTOs da aplicação por meio dos adaptadores de persistência.
 
 ### Presentation
 
@@ -399,6 +407,8 @@ Principais recursos:
 | Transferências | Transferências entre contas |
 | Transações | Consulta do histórico de transações |
 | Contas do cliente | Consulta das contas associadas a um cliente |
+| Relatórios de movimentações | Consulta de quantidades e totais por tipo de operação e conta |
+| Ranking de contas | Classificação de contas por volume movimentado |
 
 A documentação completa dos endpoints está disponível através do Swagger UI.
 
@@ -498,6 +508,7 @@ docker compose down
 - Regras de negócio encapsuladas no domínio.
 - Separação entre entidades de domínio e entidades de persistência.
 - Casos de uso desacoplados da infraestrutura através de Ports & Adapters.
+- Consultas SQL nativas no PostgreSQL para relatórios de movimentações por conta e ranking por volume movimentado, utilizando JOINs, agrupamentos e funções de agregação.
 - Geração de identificadores específicos para cada contexto do domínio.
 - Paginação de consultas utilizando Spring Data.
 - Tratamento centralizado de exceções e códigos de erro da API.
