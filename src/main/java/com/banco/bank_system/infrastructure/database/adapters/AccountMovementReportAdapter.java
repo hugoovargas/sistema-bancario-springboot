@@ -9,12 +9,12 @@ import com.banco.bank_system.infrastructure.database.sql.JpaAccountMovementRepor
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class AccountMovementReportRepositoryAdapter
+public class AccountMovementReportAdapter
         implements AccountMovementReportRepositoryPort {
 
     private final JpaAccountMovementReportRepository repository;
 
-    public AccountMovementReportRepositoryAdapter(
+    public AccountMovementReportAdapter(
             JpaAccountMovementReportRepository repository
     ) {
         this.repository = repository;
