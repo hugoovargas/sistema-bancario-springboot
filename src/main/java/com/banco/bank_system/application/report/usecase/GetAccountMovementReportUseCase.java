@@ -21,4 +21,10 @@ public class GetAccountMovementReportUseCase {
         this.reportRepository = reportRepository;
         this.accountFinder = accountFinder;
     }
+
+    public AccountMovementReport execute(AccountIdentity accountIdentity) {
+        Account account = accountFinder.byIdentity(accountIdentity);
+
+        return reportRepository.findMovementReportByAccountId(account.getId());
+    }
 }
