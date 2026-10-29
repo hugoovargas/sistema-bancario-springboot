@@ -25,9 +25,9 @@ public class OpenApiConfig {
                                 .version("1.0.0")
                                 .contact(
                                         new Contact()
-                                                .name("Hugo")
-                                                .email("seu-email@email.com")
-                                                .url("https://github.com/seuusuario")
+                                                .name("Hugo Vargas")
+                                                .email("hugoovvargas@gmail.com")
+                                                .url("https://github.com/hugoovargas")
                                 )
                 );
     }
